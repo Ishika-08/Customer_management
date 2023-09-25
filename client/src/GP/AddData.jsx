@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 function CreateUser(){
     //for contents table
-    const [Mailboxes, setMailBox] = useState()
+    const [MailBox, setMailBox] = useState()
     const [DocsURL, setDocsUrl] = useState()
     const [Title, setTitle] = useState()
     const [Email, setEmailId] = useState()
@@ -33,13 +33,17 @@ function CreateUser(){
     const navigate = useNavigate()
     let html
 
-    const {table} = useParams()
+    let {table} = useParams()
 
 
     const Submit = (e)=>{
         e.preventDefault();
+        console.log({MailBox, DA, Website, Email, Contacted, DF, Topic, LTE, AnchorText, PublishLink, Status, SS})
         if( table === "H4" || table === "CT" ||table === "Can" ||table === "FAO" ||table === "FP" ||table === "SC" ||table === "T+" ||table === "TH" ||table === "TW" ||table === "VE" ){
-            axios.post("http://localhost:3000/Add/" + table, {DA, Website, Email, Contacted, DF, Topic, LTE, AnchorText, PublishLink, Status, SS})
+            if(table==="H4"){
+                table = "4H"
+            }
+            axios.post("http://localhost:3000/Add/" + table, {MailBox, DA, Website, Email, Contacted, DF, Topic, LTE, AnchorText, PublishLink, Status, SS})
             .then(result => {
                 console.log(result)
                 navigate('/GP')
@@ -48,13 +52,21 @@ function CreateUser(){
         }
 
         else if(table === "Contents" || table==="ExtraContents"){
-        axios.post("http://localhost:3000/Add/" + table, {Mailboxes, DocsURL, Title, Email, Status, Site, Requirements, DF})
+        axios.post("http://localhost:3000/Add/" + table, {Mailbox, DocsURL, Title, Email, Status, Site, Requirements, DF})
             .then(result => {
                 console.log(result)
                 navigate('/GP')
             })
             .catch(err => console.log(err))
         }
+        else if(table === "Database" || table === "Track"){
+            axios.post("http://localhost:3000/Add/" + table, {Website,Email})
+                .then(result => {
+                    console.log(result)
+                    navigate('/GP')
+                })
+                .catch(err => console.log(err))
+            }
     }   
 
     if( table === "H4" || table === "CT" ||table === "Can" ||table === "FAO" ||table === "FP" ||table === "SC" ||table === "T+" ||table === "TH" ||table === "TW" ||table === "VE" ){
@@ -64,6 +76,12 @@ function CreateUser(){
                 <div className='w-50 bg-white rounded p-3'>
                     <form onSubmit={Submit}>
                         <h2>Add User to {table}</h2>
+                        <div className='mb-2'>
+                                <label htmlFor=''>Mailboxes</label>
+                                <input type='text' placeholder='Enter Name' className='form-control'
+                                    onChange =  {(e) => setMailBox(e.target.value)}
+                                />
+                        </div>
                         <div className='mb-2'>
                             <label htmlFor=''>DA</label>
                             <input type='text' placeholder='Enter Name' className='form-control'
@@ -190,6 +208,58 @@ function CreateUser(){
                                 <label htmlFor=''>DF</label>
                                 <input type='text' placeholder='Enter Name' className='form-control'
                                     onChange =  {(e) => setDF(e.target.value)}
+                                />
+                            </div>
+                            <button className='btn btn-success'>Submit</button>
+                        </form>
+                    </div>
+               </div>
+            </>
+        )
+    }
+    else if(table === "Database"){
+        html = (
+            <>
+               <div className='d-flex vh-100 bg-primary justify-content-center align-items-center'>
+                    <div className='w-50 bg-white rounded p-3'>
+                        <form onSubmit={Submit}>
+                            <h2>Add User</h2>
+                            <div className='mb-2'>
+                            <label htmlFor=''>Website</label>
+                            <input type='text' placeholder='Enter Name' className='form-control'
+                                onChange =  {(e) => setWebsite(e.target.value)}
+                            />
+                        </div>
+                            <div className='mb-2'>
+                                <label htmlFor=''>Email ID</label>
+                                <input type='email' placeholder='Enter Name' className='form-control'
+                                    onChange =  {(e) => setEmailId(e.target.value)}
+                                />
+                            </div>
+                            <button className='btn btn-success'>Submit</button>
+                        </form>
+                    </div>
+               </div>
+            </>
+        )
+    }
+    else if(table === "Track"){
+        html = (
+            <>
+               <div className='d-flex vh-100 bg-primary justify-content-center align-items-center'>
+                    <div className='w-50 bg-white rounded p-3'>
+                        <form onSubmit={Submit}>
+                            <h2>Add User</h2>
+                            <div className='mb-2'>
+                            <label htmlFor=''>Website</label>
+                            <input type='text' placeholder='Enter Name' className='form-control'
+                                onChange =  {(e) => setWebsite(e.target.value)}
+                            />
+                        </div>
+                            <div className='mb-2'>
+                                <label htmlFor=''>Email ID</label>
+                                <input type='email' placeholder='Enter Name' className='form-control'
+                                    onChange =  {(e) => setEmailId(e.target.value)}
                                 />
                             </div>
                             <button className='btn btn-success'>Submit</button>

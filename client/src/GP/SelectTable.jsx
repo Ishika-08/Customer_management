@@ -1,9 +1,21 @@
-import {useState} from "react"
+import {useState, useEffect} from "react"
 import { useNavigate } from "react-router-dom"
+import axios from "axios"
 
 const AddData = ()=>{ 
     const [table, setTable] = useState()
+    const [models, setModels] = useState([])
 
+    useEffect(() => {
+        axios.get("http://localhost:3000/models")
+        .then(result => setModels(result.data.modelNames))
+        .catch(err => console.log(err));
+      }
+      , []); 
+
+      models.map(element => {
+        console.log(element)
+      })
 
     const navigate= useNavigate()
 
@@ -24,20 +36,9 @@ const AddData = ()=>{
             onChange={(e) => setTable(e.target.value)}>
                 <option>---------</option>
                 <option value="H4">4H</option>
-                <option>Accounts</option>
-                <option>Can</option>
-                <option>Contents</option>
-                <option>CT</option>
-                <option>Database</option>
-                <option>FAO</option>
-                <option>FP</option>
-                <option>SC</option>
-                <option>TPlus</option>
-                <option>TH</option>
-                <option>Topics2</option>
-                <option>TW</option>
-                <option>VE</option>
-                <option>ExtraContents</option>
+                {models.map(element => {
+                    return <option>{element}</option>
+                })}
             </select> 
             <button className="btn btn-lg btn-success mt-4">ADD</button>
             </form>

@@ -7,6 +7,7 @@ import GP from "./GP/GP"
 import Update from "./GP/Update"
 import Pitch from "./Pitch/pitch"
 import Topic from "./GP/Topics"
+import Publish from "./GP/Publish"
 import "bootstrap/dist/css/bootstrap.min.css"
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/GP/Update/:id/" element={<Update/>}></Route>
         <Route path="/Pitch" element={<Pitch/>}></Route>
         <Route path="/GP/Topics/:site" element={<Topic/>}></Route>
+        <Route path="/GP/publish/:table/:id" element={<Publish/>}></Route>
       </Routes>
     </BrowserRouter>
   )

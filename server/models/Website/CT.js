@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 
 const TableSchema = new mongoose.Schema({
+    MailBox: String,
     DA: String,
     Website: String,
     Email: String,
