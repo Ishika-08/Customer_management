@@ -4,9 +4,11 @@ const DataModel = require("../models/Database")
 const TrackModel = require("../models/Track")
 const AccountsSchema = require("../models/Accounts")
 const CheckLinksModel = require("../models/checkLinks")
+const SavedDocumentsModel = require("../models/SavedDocuments")
 const {CTModel,H4Model,CanModel,THModel, TPlusModel,FAOModel, FPModel, SCModel, TWModel, VEModel} = require("../models/Website/CT");
 
 const models = {
+  SavedDocuments: SavedDocumentsModel,
     Accounts: AccountsSchema,
     checkLinks: CheckLinksModel,
     Track: TrackModel, 

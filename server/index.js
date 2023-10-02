@@ -1,19 +1,19 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors');
-const ContentsModel = require("./models/Content/Contents")
-const ExtraContentsModel = require("./models/Content/ExtraContent")
-const DataModel = require("./models/Database")
-const TrackModel = require("./models/Track")
-const AccountsSchema = require("./models/Accounts")
-const CheckLinksModel = require("./models/checkLinks")
-const {CTModel,H4Model,CanModel,THModel, TPlusModel,FAOModel, FPModel, SCModel, TWModel, VEModel} = require("./models/Website/CT");
-const connectToDatabase = require('./config/db');
+const cron = require('node-cron');
+
+const connectToDatabase = require("./config/db")
+
 const databaseRouter = require('./routes/GP/DatabaseRoutes');
 const websiteRouter = require('./routes/GP/WebsiteRoutes');
 const contentRouter = require('./routes/GP/ContentRoutes');
 const trackRouter = require('./routes/Pitch/TrackRouter');
 const LinkRouter = require('./routes/CheckOldLinks/LinkRouter');
+const checkHrefRouter = require('./routes/CheckOldLinks/CheckHrefRouter');
+
+const CTModel = require("./models/Website/CT")
+
 
 
 const app = express()
@@ -30,41 +30,29 @@ app.use('/content', contentRouter);
 
 //for Pitch
 app.use('/track', trackRouter);
+
+//for check old links
+app.use('/check-href', checkHrefRouter);
 app.use('/check-links', LinkRouter);
 
 
+// Schedule the script to run every 15 days at midnight
+// cron.schedule('0 0 */15 * *', () => {
+//   console.log('Running the script every 15 days at midnight.');
 
-const models = {
-    Accounts: AccountsSchema,
-    checkLinks: CheckLinksModel,
-    Track: TrackModel, 
-    Contents: ContentsModel,
-    ExtraContents: ExtraContentsModel,
-    Database: DataModel,
-    CT: CTModel,
-    H4: H4Model,
-    Can: CanModel,
-    TH: THModel,
-    TPlus: TPlusModel,
-    FAO: FAOModel,
-    FP: FPModel,
-    SC: SCModel,
-    TW: TWModel,
-    VE: VEModel
-  };
+  // Trigger the '/check-href' route by making an HTTP GET request to your own server
+//   axios.get('http://localhost:4000/check-href')
+//     .then(response => {
+//       console.log('Check-href route triggered successfully.');
+//       // You can log or handle the response if needed.
+//     })
+//     .catch(error => {
+//       console.error('Error triggering check-href route:', error);
+//       // Handle the error if the request fails.
+//     });
+// });
 
-  const website = {
-    CT: CTModel,
-    H4: H4Model,
-    Can: CanModel,
-    TH: THModel,
-    TPlus: TPlusModel,
-    FAO: FAOModel,
-    FP: FPModel,
-    SC: SCModel,
-    TW: TWModel,
-    VE: VEModel
-  };
+
 
 
 //to get the name of all the websites(website sheets) present in GP
@@ -88,81 +76,6 @@ app.get("/models", (req, res) => {
   }
 });
 
-// //to find all the faulty links 
-// app.get('/get-links', async (req, res) => {
-//   try {
-//     // Find all entries in the CheckLinksModel
-//     const checkLinksEntries = await CheckLinksModel.find();
-
-//     // Initialize an object to store data for each website
-//     const websiteData = {};
-
-//     // Loop through the entries in CheckLinksModel
-//     for (const entry of checkLinksEntries) {
-//       const { websiteName, rowID, newAnchor, _id } = entry;
-
-//       // Determine the appropriate website model based on websiteName
-//       let websiteModel;
-//       switch (websiteName) {
-//         case 'CTModel':
-//           websiteModel = CTModel;
-//           break;
-//         case 'H4Model':
-//           websiteModel = H4Model;
-//           break;
-//         case 'CanModel':
-//           websiteModel = CanModel;
-//           break;
-//         case 'THModel':
-//           websiteModel = THModel;
-//           break;
-//         case 'TPlusModel':
-//           websiteModel = TPlusModel;
-//           break;
-//         case 'FAOModel':
-//           websiteModel = FAOModel;
-//           break;
-//         case 'FPModel':
-//           websiteModel = FPModel;
-//           break;
-//         case 'SCModel':
-//           websiteModel = SCModel;
-//           break;
-//         case 'TWModel':
-//           websiteModel = TWModel;
-//           break;
-//         case 'VEModel':
-//           websiteModel = VEModel;
-//           break;
-//         default:
-//           // Handle unknown name here
-//           break;
-//       }
-
-//       // Find the corresponding row in the website model using rowID
-//       const websiteRow = await websiteModel.findById(rowID);
-
-//       // Create an object with the necessary data
-//       const rowData = {
-//         _id,
-//         newAnchor,
-//         websiteRow
-//       };
-
-//       // Add the rowData to the websiteData object
-//       if (!websiteData[websiteName]) {
-//         websiteData[websiteName] = [];
-//       }
-//       websiteData[websiteName].push(rowData);
-//     }
-
-//     // Send the websiteData object as a response
-//     res.json(websiteData);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'An error occurred' });
-//   }
-// });
 
 app.get('/add-website/:websiteName', (req, res) => {
   console.log("here")

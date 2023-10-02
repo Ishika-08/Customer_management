@@ -10,7 +10,7 @@ const TableSchema = new mongoose.Schema({
     Topic: String,
     LTE: String,
     AnchorText: String,
-    PublishLink: String, 
+    PublishedLink: String, 
     Status: String,
     SS: String
 })

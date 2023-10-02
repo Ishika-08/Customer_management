@@ -5,7 +5,8 @@ const checkLinksSchema = new mongoose.Schema({
   rowID: mongoose.Schema.Types.ObjectId,
   status: String,
   anchorText: String,
-  newAnchor: String
+  newAnchor: String,
+  PublishedLink: String
 },
 {
     collection: "checkLinks"
