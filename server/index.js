@@ -13,6 +13,8 @@ const databaseRouter = require('./routes/GP/DatabaseRoutes');
 const websiteRouter = require('./routes/GP/WebsiteRoutes');
 const contentRouter = require('./routes/GP/ContentRoutes');
 const trackRouter = require('./routes/Pitch/TrackRouter');
+const LinkRouter = require('./routes/CheckOldLinks/LinkRouter');
+
 
 const app = express()
 app.use(express.json())
@@ -28,6 +30,8 @@ app.use('/content', contentRouter);
 
 //for Pitch
 app.use('/track', trackRouter);
+app.use('/check-links', LinkRouter);
+
 
 
 const models = {

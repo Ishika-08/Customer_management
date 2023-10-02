@@ -1,6 +1,6 @@
 import './App.css'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import Home from "./Home"
+import Home from "./HomePage/Home"
 import AddData from "./GP/SelectTable"
 import Add from "./GP/AddData"
 import GP from "./GP/GP"

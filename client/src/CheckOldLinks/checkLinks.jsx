@@ -5,7 +5,7 @@ const Table = () => {
   const [updatedData, setUpdatedData] = useState([]);
 
   useEffect(()=>{
-    axios.get("http://localhost:3000/get-links/")
+    axios.get("http://localhost:3000/check-links/get-links/")
   .then(result => setUpdatedData(result.data))
   .catch(err => console.log(err))
   },[])
@@ -15,15 +15,13 @@ const Table = () => {
   console.log(updatedData)
 
   const handleDelete = (rowId) => {
-    // Implement logic to delete the row with the given rowId
-    // Update the state (updatedData) to reflect the changes
+    
     const updatedRows = updatedData.filter((row) => row.websiteRow._id !== rowId);
     setUpdatedData(updatedRows);
   };
 
   const handleUpdate = (rowId) => {
-    // Implement logic to update the row with the given rowId
-    // You can open a modal or form for updating data
+   
   };
 
   return (
