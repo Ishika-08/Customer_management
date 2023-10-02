@@ -13,9 +13,9 @@ function Home() {
     const [showTopics, setShowTopics] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
     const navigate= useNavigate()
-    console.log(showTopics)
-    console.log(selectedIds.length)
-    console.log(selectedIds)
+    // console.log(showTopics)
+    // console.log(selectedIds.length)
+    // console.log(selectedIds)
 
 
 
@@ -47,7 +47,7 @@ function Home() {
         }
       
         axios
-          .delete('http://localhost:3000/delete/' + table, { data: { ids: selectedIds } })
+          .delete('http://localhost:3000/content/delete/' + table, { data: { ids: selectedIds } })
           .then((response) => {
             console.log(response.data); 
             setContent((prevContent) =>

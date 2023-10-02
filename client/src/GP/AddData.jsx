@@ -43,7 +43,7 @@ function CreateUser(){
             if(table==="H4"){
                 table = "4H"
             }
-            axios.post("http://localhost:3000/Add/" + table, {MailBox, DA, Website, Email, Contacted, DF, Topic, LTE, AnchorText, PublishLink, Status, SS})
+            axios.post("http://localhost:3000/content/Add/" + table, {MailBox, DA, Website, Email, Contacted, DF, Topic, LTE, AnchorText, PublishLink, Status, SS})
             .then(result => {
                 console.log(result)
                 navigate('/GP')
@@ -52,7 +52,7 @@ function CreateUser(){
         }
 
         else if(table === "Contents" || table==="ExtraContents"){
-        axios.post("http://localhost:3000/Add/" + table, {Mailbox, DocsURL, Title, Email, Status, Site, Requirements, DF})
+        axios.post("http://localhost:3000/content/Add/" + table, {Mailbox, DocsURL, Title, Email, Status, Site, Requirements, DF})
             .then(result => {
                 console.log(result)
                 navigate('/GP')
@@ -60,7 +60,7 @@ function CreateUser(){
             .catch(err => console.log(err))
         }
         else if(table === "Database" || table === "Track"){
-            axios.post("http://localhost:3000/Add/" + table, {Website,Email})
+            axios.post("http://localhost:3000/content/Add/" + table, {Website,Email})
                 .then(result => {
                     console.log(result)
                     navigate('/GP')

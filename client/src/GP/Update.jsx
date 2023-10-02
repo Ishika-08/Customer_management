@@ -25,7 +25,7 @@ function Update() {
 
 
   useEffect(()=>{
-    axios.get('http://localhost:3000/update/' + id)
+    axios.get('http://localhost:3000/content/update/' + id)
     .then(result => {
         console.log(result.data)
       setFormData(result.data)
@@ -43,7 +43,7 @@ function Update() {
   };
 
   const handleSubmit = () => {
-   axios.put('http://localhost:3000/update/' + id, formData)
+   axios.put('http://localhost:3000/content/update/' + id, formData)
    .then(navigate('/GP'))
    .catch(err => console.log(err))
   };

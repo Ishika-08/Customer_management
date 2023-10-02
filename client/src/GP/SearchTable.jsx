@@ -9,16 +9,19 @@ function SearchTable({ content, handleCheckboxChange, selectedIds, selectedRowSt
   const [showWebsiteTable, setShowWebsiteTable] = useState(false);
   const [updateSiteId, setUpdateSiteId] = useState()
   const [searchContent, setSearchContent] = useState(content); 
+
   
   useEffect(() => {
     setSearchContent(content);
   }, [content]);
   
 
+
   useEffect(() => {
     if (domain) {
-      axios.get("http://localhost:3000/findWebsite/" + domain)
-        .then(result => setWebsitesFound(result.data.websitesFound))
+      axios.get("http://localhost:3000/website/" + domain)
+        .then(result => {
+          setWebsitesFound(result.data.websitesFound)})
         .catch(err => console.log(err));
     }
   }, [domain]); 
@@ -29,12 +32,12 @@ function SearchTable({ content, handleCheckboxChange, selectedIds, selectedRowSt
     .catch(err => console.log(err));
   }, []); 
 
-//used for suggest site button
+
+//used for suggest site button get domain
   const handleSite = (Email, id) => {
     setUpdateSiteId(id);
     axios.get("http://localhost:3000/database/" + Email)
       .then(result => {
-        console.log(result)
         const websiteUrl = result.data[0].Website;
         const url = new URL(websiteUrl);
         const domain = url.hostname; // Extract the domain from the URL
@@ -46,7 +49,7 @@ function SearchTable({ content, handleCheckboxChange, selectedIds, selectedRowSt
   
 //used for updating site name in contents table and rerendering table
     const handleSelect = (websiteName) =>{
-      axios.put('http://localhost:3000/update/' + updateSiteId, {...content, Site: websiteName})
+      axios.put('http://localhost:3000/content/update/' + updateSiteId, {...content, Site: websiteName})
    .then(result =>{
     console.log(result)
     const updatedObjectIndex = content.findIndex(obj => obj._id === result.data._id);

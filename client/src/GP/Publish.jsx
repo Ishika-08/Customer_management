@@ -19,7 +19,7 @@ const Publish = () => {
   const id = useParams().id;
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/update/${id}`)
+    axios.get(`http://localhost:3000/content/update/${id}`)
       .then(result => {
         setFormData(prev => ({
             ...prev,
