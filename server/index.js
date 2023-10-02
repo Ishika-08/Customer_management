@@ -8,26 +8,14 @@ const TrackModel = require("./models/Track")
 const AccountsSchema = require("./models/Accounts")
 const CheckLinksModel = require("./models/checkLinks")
 const {CTModel,H4Model,CanModel,THModel, TPlusModel,FAOModel, FPModel, SCModel, TWModel, VEModel} = require("./models/Website/CT");
+const connectToDatabase = require('./config/db');
 
 const app = express()
 app.use(express.json())
 app.use(cors())
 
+connectToDatabase()
 
-mongoose.connect("mongodb+srv://kaushalmalkan:Harvey11@cluster0.c9lbzxx.mongodb.net/Techwhoop?retryWrites=true&w=majority", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => console.log('Connected to MongoDB Atlas'))
-  .catch(err => console.error('Error connecting to MongoDB:', err));
-
-
-
-// mongoose.connect("mongodb://127.0.0.1:27017/TechWhoop")
-// const DB = "mongodb+srv://kaushalmalkan:xpGO1KOOaptbzXab@cluster0.c9lbzxx.mongodb.net/Techwhoop?retryWrites=true&w=majority"
-// mongoose.connect(DB)
-// .then(() => console.log("Successful connnection"))
-// .catch((err) => console.log(err))
 
 const models = {
     Accounts: AccountsSchema,
