@@ -7,8 +7,9 @@ const AddData = ()=>{
     const [models, setModels] = useState([])
 
     useEffect(() => {
-        axios.get("http://localhost:3000/models")
-        .then(result => setModels(result.data.modelNames))
+        axios.get("http://localhost:3000/models/")
+        .then(result => {setModels(result.data.modelNames)
+        console.log(result.data)})
         .catch(err => console.log(err));
       }
       , []); 

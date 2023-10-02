@@ -8,7 +8,13 @@ function SearchTable({ content, handleCheckboxChange, selectedIds, selectedRowSt
   const [website, setWebsite] = useState([])
   const [showWebsiteTable, setShowWebsiteTable] = useState(false);
   const [updateSiteId, setUpdateSiteId] = useState()
-  // const [searchContent, setSearchContent] = useState(content); // State to manage search table content
+  const [searchContent, setSearchContent] = useState(content); 
+  
+  useEffect(() => {
+    setSearchContent(content);
+  }, [content]);
+  
+
   useEffect(() => {
     if (domain) {
       axios.get("http://localhost:3000/findWebsite/" + domain)
@@ -18,15 +24,17 @@ function SearchTable({ content, handleCheckboxChange, selectedIds, selectedRowSt
   }, [domain]); 
 
   useEffect(() => {
-    axios.get("http://localhost:3000/websites")
+    axios.get("http://localhost:3000/websites/")
     .then(result => setWebsite(result.data.websiteNames))
     .catch(err => console.log(err));
   }, []); 
 
+//used for suggest site button
   const handleSite = (Email, id) => {
     setUpdateSiteId(id);
     axios.get("http://localhost:3000/database/" + Email)
       .then(result => {
+        console.log(result)
         const websiteUrl = result.data[0].Website;
         const url = new URL(websiteUrl);
         const domain = url.hostname; // Extract the domain from the URL
@@ -36,17 +44,18 @@ function SearchTable({ content, handleCheckboxChange, selectedIds, selectedRowSt
       .catch(err => console.log(err));
   }
   
-
+//used for updating site name in contents table and rerendering table
     const handleSelect = (websiteName) =>{
       axios.put('http://localhost:3000/update/' + updateSiteId, {...content, Site: websiteName})
    .then(result =>{
     console.log(result)
-    // setSearchContent((prevContent) =>
-    //       prevContent.map((item) =>
-    //         item._id === updateSiteId ? { ...item, Site: websiteName } : item
-    //       )
-    //     );
-  })
+    const updatedObjectIndex = content.findIndex(obj => obj._id === result.data._id);
+        if (updatedObjectIndex !== -1) {
+          const updatedContent = [...content];
+          updatedContent[updatedObjectIndex] = result.data;
+          setSearchContent(updatedContent);
+          setShowWebsiteTable(false)
+  }})
    .catch(err => console.log(err))
     }
 
@@ -78,7 +87,7 @@ function SearchTable({ content, handleCheckboxChange, selectedIds, selectedRowSt
                       </tr>
                     </thead>
                     <tbody>
-                      {content.map((content, index) => {
+                      {searchContent.map((content, index) => {
                         const rowNumber = index + 1;
                         return (
                           <tr key={content._id} scope="row">

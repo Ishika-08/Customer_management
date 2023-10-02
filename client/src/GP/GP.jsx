@@ -12,8 +12,11 @@ function Home() {
     const [site, setSite] = useState()
     const [showTopics, setShowTopics] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
-
     const navigate= useNavigate()
+    console.log(showTopics)
+    console.log(selectedIds.length)
+    console.log(selectedIds)
+
 
 
     const handleCheckboxChange = (event, contentId, status, site) => {
@@ -109,7 +112,7 @@ function Home() {
                     <button
                         className="btn btn-info btn-lg mt-5"
                         onClick={handleTopics}
-                        disabled={selectedIds.length !== 1  || selectedRowStatus !== "pending"}
+                        disabled={(selectedIds.length) !== 1  || selectedRowStatus !== "pending"}
                     >
                         Topics
                     </button>
@@ -117,18 +120,18 @@ function Home() {
                 </div>
 
 
-     <SearchTable
-                content={content}
-                handleCheckboxChange={handleCheckboxChange}
-                selectedIds={selectedIds}
-                selectedRowStatus={selectedRowStatus}
-            />
+              <SearchTable
+                          content={content}
+                          handleCheckboxChange={handleCheckboxChange}
+                          selectedIds={selectedIds}
+                          selectedRowStatus={selectedRowStatus}
+                      />
 
-        {showTopics && selectedIds.length === 1 && (
-            <div className="container">
-                <Topic site={site} />
-            </div>
-        )}  
+                  {showTopics && (selectedIds.length) === 1 && (
+                      <div className="container">
+                          <Topic site={site}/>
+                      </div>
+                  )}  
         </>
     );
 }

@@ -5,15 +5,33 @@ const ContentsModel = require("./models/Content/Contents")
 const ExtraContentsModel = require("./models/Content/ExtraContent")
 const DataModel = require("./models/Database")
 const TrackModel = require("./models/Track")
+const AccountsSchema = require("./models/Accounts")
+const CheckLinksModel = require("./models/checkLinks")
 const {CTModel,H4Model,CanModel,THModel, TPlusModel,FAOModel, FPModel, SCModel, TWModel, VEModel} = require("./models/Website/CT");
 
 const app = express()
 app.use(express.json())
 app.use(cors())
 
-mongoose.connect("mongodb://127.0.0.1:27017/TechWhoop")
+
+mongoose.connect("mongodb+srv://kaushalmalkan:Harvey11@cluster0.c9lbzxx.mongodb.net/Techwhoop?retryWrites=true&w=majority", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('Connected to MongoDB Atlas'))
+  .catch(err => console.error('Error connecting to MongoDB:', err));
+
+
+
+// mongoose.connect("mongodb://127.0.0.1:27017/TechWhoop")
+// const DB = "mongodb+srv://kaushalmalkan:xpGO1KOOaptbzXab@cluster0.c9lbzxx.mongodb.net/Techwhoop?retryWrites=true&w=majority"
+// mongoose.connect(DB)
+// .then(() => console.log("Successful connnection"))
+// .catch((err) => console.log(err))
 
 const models = {
+    Accounts: AccountsSchema,
+    checkLinks: CheckLinksModel,
     Track: TrackModel, 
     Contents: ContentsModel,
     ExtraContents: ExtraContentsModel,
@@ -46,8 +64,11 @@ const models = {
 //to search for an email in contents table
 app.get("/search/:searchEmail/", (req,res)=>{
    const email = req.params.searchEmail
+   console.log(email)
     ContentsModel.find({Email: email})
-   .then(content => {res.json(content)})
+   .then(content => {
+    console.log(content)
+    res.json(content)})
    .catch(err => res.json(err))
 })
 
@@ -73,10 +94,47 @@ app.get("/models", (req, res) => {
 });
 
 
+// app.get("/models", async (req, res) => {
+//   try {
+//     // Get all collection names in the database
+//     const collectionNames = await mongoose.connection.db.listCollections().toArray();
+
+//     // Initialize an array to store collection names with schemas
+//     const collections = [];
+
+//     // Iterate through the collection names
+//     for (const collection of collectionNames) {
+//       // Store the collection name
+//       const collectionName = collection.name;
+
+//       try {
+//         // Try to get the schema for the collection
+//         const modelSchema = mongoose.model(collectionName).schema.obj;
+
+//         // Only include collections with a schema
+//         if (modelSchema) {
+//           collections.push(collectionName);
+//         }
+//       } catch (error) {
+//         // If an error occurs, log it (e.g., schema not defined)
+//         console.error(`Error getting schema for collection "${collectionName}":`, error);
+//       }
+//     }
+
+//     res.json(collections);
+//   } catch (error) {
+//     console.error('Error:', error);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// });
+
+
+
 //to search for email in Database table
 app.get("/database/:email", (req,res)=>{
   const email = req.params.email
-  DataModel.find({Email: email})
+  const caseInsensitiveEmail = new RegExp(email, "i");
+  DataModel.find({Email: caseInsensitiveEmail})
   .then(result => res.json(result))
   .catch(err => console.log(err))
 })
@@ -149,9 +207,9 @@ app.put("/update/:id", (req,res)=>{
       {_id: id}, 
       data)
       .then((result)=>{
-        console.log(result)
-      res.status(200).json({ message: 'Items updated successfully'})}
-      )  .catch(err=> res.json(err))
+        res.json(result)
+      })  
+      .catch(err=> res.json(err))
 })
 
 
@@ -215,7 +273,6 @@ const query = {
   TrackModel.find(query)
     .limit(48) 
     .then(docs => {
-      console.log(docs)
       const emailSet = new Set(); 
       const emailIdMap = new Map(); 
 
@@ -279,8 +336,103 @@ app.get('/', (req, res) => {
     });
 });
 
+//to find all the faulty links 
+app.get('/get-links', async (req, res) => {
+  try {
+    // Find all entries in the CheckLinksModel
+    const checkLinksEntries = await CheckLinksModel.find();
+
+    // Initialize an object to store data for each website
+    const websiteData = {};
+
+    // Loop through the entries in CheckLinksModel
+    for (const entry of checkLinksEntries) {
+      const { websiteName, rowID, newAnchor, _id } = entry;
+
+      // Determine the appropriate website model based on websiteName
+      let websiteModel;
+      switch (websiteName) {
+        case 'CTModel':
+          websiteModel = CTModel;
+          break;
+        case 'H4Model':
+          websiteModel = H4Model;
+          break;
+        case 'CanModel':
+          websiteModel = CanModel;
+          break;
+        case 'THModel':
+          websiteModel = THModel;
+          break;
+        case 'TPlusModel':
+          websiteModel = TPlusModel;
+          break;
+        case 'FAOModel':
+          websiteModel = FAOModel;
+          break;
+        case 'FPModel':
+          websiteModel = FPModel;
+          break;
+        case 'SCModel':
+          websiteModel = SCModel;
+          break;
+        case 'TWModel':
+          websiteModel = TWModel;
+          break;
+        case 'VEModel':
+          websiteModel = VEModel;
+          break;
+        default:
+          // Handle unknown name here
+          break;
+      }
+
+      // Find the corresponding row in the website model using rowID
+      const websiteRow = await websiteModel.findById(rowID);
+
+      // Create an object with the necessary data
+      const rowData = {
+        _id,
+        newAnchor,
+        websiteRow
+      };
+
+      // Add the rowData to the websiteData object
+      if (!websiteData[websiteName]) {
+        websiteData[websiteName] = [];
+      }
+      websiteData[websiteName].push(rowData);
+    }
+
+    // Send the websiteData object as a response
+    res.json(websiteData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+app.get('/add-website/:websiteName', (req, res) => {
+  console.log("here")
+  const { websiteName } = req.params;
+  console.log(websiteName)
+
+  // Check if the websiteName parameter matches an existing model name
+  if (website[websiteName]) {
+    res.status(400).json({ error: `Website "${websiteName}" already exists` });
+  } else {
+    // Create a new model based on the TableSchema from website.js
+    const NewWebsiteModel = mongoose.model(websiteName, CTModel.schema, websiteName);
+
+    // Add the new website to the website object
+    website[websiteName] = NewWebsiteModel;
+
+    res.status(201).json({ message: `New website "${websiteName}" added successfully` });
+  }
+});
 
  
-app.listen(3000, ()=>{
-    console.log("Server started at port 3000")
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, ()=>{
+    console.log(`Server started at port ${PORT}`)
 })

@@ -8,7 +8,7 @@ const Home = ()=>{
                 <Link to="/pitch" className="w-100 btn btn-primary btn-lg mb-4">Pitching</Link>
                 </tr>
                 <tr>
-                <Link to="/pitch" className="w-100 btn btn-secondary btn-lg mb-4">Check Old Links</Link>
+                <Link to="/checkLinks" className="w-100 btn btn-secondary btn-lg mb-4">Check Old Links</Link>
                 </tr>
                 <tr>
                 <Link to="/GP" className="w-100 btn btn-success btn-lg">Work on GP</Link>

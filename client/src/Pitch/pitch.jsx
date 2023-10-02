@@ -32,19 +32,19 @@ const AddData = () => {
     );
   };
 
+
   const mailboxOptions = [
     { value: "", name: "---------" },
-    { value: "Mobi", name: "ellieben11@gmail.com" },
-    { value: "One", name: "breannethorne11@gmail.com" },
-    { value: "PH", name: "johnocampos121@gmail.com" },
-    { value: "TW", name: "walterrichards21@gmail.com" },
-    { value: "TH", name: "quinnwilde761@gmail.com" },
-    { value: "FAO", name: "eziomontoya1@gmail.com" },
-    { value: "T+", name: "siasmith21@gmail.com" },
-    { value: "CT", name: "avasmith2112@gmail.com" },
-    { value: "VE", name: "rebeccarogers1101@gmail.com" },
-    { value: "WT", name: "katiespring83@gmail.com" },
-    { value: "4H", name: "katiespring83@gmail.com" },
+    { value: "4H", name: "ellieben11@gmail.com" },
+    { value: "FAO", name: "breannethorne11@gmail.com" },
+    { value: "TW", name: "quinnwilde761@gmail.com" },
+    { value: "TH", name: "eziomontoya1@gmail.com" },
+    { value: "SC", name: "johnocampos121@gmail.com" },
+    { value: "T+", name: "katiespring83@gmail.com" },
+    { value: "CT", name: "synthiawright35@gmail.com    " },
+    { value: "VE", name: "siasmith21@gmail.com" },
+    { value: "FP", name: "maddisonparker2354@gmail.com " },
+    { value: "Can", name: "adelaideferrano364@gmail.com" },
   ];
 
   return (
@@ -83,16 +83,12 @@ const AddData = () => {
               Copy Selected Titles
             </button>
           </div>
-          <div className="row">
+          <div className="list-group">
             {emails.map((email, index) => (
-              <div className="col-md-3 mb-3" key={index}>
-                <div className="card">
-                  <div className="card-body">
-                    <p className="card-text text-center">
-                      {index + 1}. {email}
-                    </p>
-                  </div>
-                </div>
+              <div className="list-group-item d-flex justify-content-center align-items-center" key={index}>
+                <span className="text-center">
+                  {email}
+                </span>
               </div>
             ))}
           </div>

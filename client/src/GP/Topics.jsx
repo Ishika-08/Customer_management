@@ -10,7 +10,6 @@ const Topics = ({site}) => {
     axios
       .get("http://localhost:3000/GP/Topics/" + site)
       .then((result) => {
-        console.log(result);
         setContent(result.data);
       })
       .catch((err) => console.log(err));
@@ -41,8 +40,9 @@ const Topics = ({site}) => {
 
   const handleSelect = (row)=>{
     const table = "ExtraContents"
-    axios.post("http://localhost:3000/Add/" + "Contents", {DocsURL: row.DocsURL, Title: row.Title, Status:row.Status, Site: row.Site})
-    .then(() => console.log("data added"))
+  
+    axios.put('http://localhost:3000/update/' + id, {DocsURL: row.DocsURL, Title: row.Title, Status:row.Status})
+    .then(navigate('/GP'))
     .catch(err => console.log(err))
 
     axios
@@ -115,15 +115,10 @@ const Topics = ({site}) => {
           </div>
         </div>
       </section>
-      <button className="btn btn-primary mx-5" onClick={handleCopy}>
-        Copy Selected Titles
+      <button className="btn btn-primary m-2" onClick={handleCopy}>
+        Copy 
       </button>
-      {copiedTitles && (
-        <div>
-          <strong>Copied Titles:</strong>
-          <pre>{copiedTitles}</pre>
-        </div>
-      )}
+     
     </>
   );
       }
